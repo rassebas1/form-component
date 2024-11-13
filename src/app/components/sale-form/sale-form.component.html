@@ -1,0 +1,22 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+  <app-dynamic-input
+    *ngFor="let config of formFields"
+    [config]="config"
+    (valueChange)="onValueChange($event)"
+  ></app-dynamic-input>
+
+  <div *ngIf="form.touched" class="error-messages">
+    <div *ngFor="let config of formFields">
+      <div
+        *ngIf="form.get(config.name)?.invalid && form.get(config.name)?.touched"
+        class="error-message"
+      >
+        {{ config.label }} is required.
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-button" [disabled]="!isFormValid()">
+    Submit
+  </button>
+</form>
