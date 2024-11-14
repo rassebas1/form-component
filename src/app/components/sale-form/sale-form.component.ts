@@ -12,25 +12,13 @@ import {
   PYMESale,
   FixedSale,
   MobileSale,
+  FormField,
+  FormPage
 } from '../../models/sale.model';
 
 import { DynamicInputComponent } from '../../components/dynamicInput/dynamic.component';
+import { BehaviorSubject, Observable,map } from 'rxjs';
 
-export interface FormField {
-  name: string;
-  label: string;
-  type:
-    | 'text'
-    | 'number'
-    | 'email'
-    | 'password'
-    | 'checkbox'
-    | 'radio'
-    | 'select'
-    | 'date';
-  options?: string[];
-  required: boolean;
-}
 
 @Component({
   selector: 'app-sale-form',
@@ -40,17 +28,43 @@ export interface FormField {
   styleUrls: ['./sale-form.component.css'],
 })
 export class FormComponent implements OnInit {
+  form!: FormGroup;
   isVisible = true;
+  formPages: FormPage[] = [];
+  currentPage$ = new BehaviorSubject<number>(0);
+  itemsPerPage = 5;
+  isSubmitting = false;
+  readonly fieldsPerPage = 5;
   @Input() saleType: SaleType = 'PYME';
   @Input() formFields: FormField[] = [];
   @Output() formSubmit = new EventEmitter<PYMESale | FixedSale | MobileSale>();
 
-  form!: FormGroup;
+  paginatedInputConfigs$: Observable<FormField[]>;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    this.paginatedInputConfigs$ = this.currentPage$.pipe(
+      map(page => {
+        const start = page * this.itemsPerPage;
+        return this.formFields.slice(start, start + this.itemsPerPage);
+      })
+    );
+  }
+ 
 
+  get totalPages(): number {
+    return Math.ceil(this.formFields.length / this.itemsPerPage);
+  }
+
+  get paginatedInputConfigs(): FormField[] {
+    const start = this.currentPage$.value * this.itemsPerPage;
+    return this.formFields.slice(start, start + this.itemsPerPage);
+  }
+  get progressPercentage(): number {
+    return ((this.currentPage$.value + 1) / this.totalPages) * 100;
+  }
   ngOnInit() {
     this.initializeForm();
+    
   }
 
   private initializeForm() {
@@ -66,7 +80,7 @@ export class FormComponent implements OnInit {
 
     this.form = this.fb.group(formGroup);
   }
-
+//send data
   onSubmit() {
     if (this.form.valid) {
       const formData = {
@@ -81,11 +95,11 @@ export class FormComponent implements OnInit {
       this.markAllAsTouched();
     }
   }
-
+//Asigna valores del input para el valor
   onValueChange(event: { name: string; value: string | boolean }) {
     this.form.get(event.name)?.setValue(event.value);
   }
-
+//revisa si se interactuó con los elementos
   markAllAsTouched() {
     Object.values(this.form.controls).forEach((control) => {
       control.markAsTouched();
@@ -103,7 +117,47 @@ export class FormComponent implements OnInit {
     }
     return true;
   }
-  toggleFormVisibility() {
-    this.isVisible = !this.isVisible;
+
+  
+  onSaleSubmit(sale: PYMESale | FixedSale | MobileSale) {
+    console.log('Sale submitted:', sale);
+    // Here you would typically send the sale to a backend service
   }
+  
+
+  isCurrentPageValid(): boolean {
+    const currentFields = this.paginatedInputConfigs;
+    return currentFields.every(field => {
+      const control = this.form;
+
+      return control && (!field.required || !control.errors);
+    });
+  }
+
+  nextPage() {
+    this.currentPage$.next(this.currentPage$.value+1) ;
+    if (this.currentPage$.value < this.totalPages - 1 && this.isCurrentPageValid()) {
+      this.formPages[this.currentPage$.value].isComplete = true;
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage$.value > 0) {
+      this.currentPage$.next(this.currentPage$.value -1);
+    }
+  }
+
+  goToPage(pageIndex: number) {
+    if (pageIndex <= this.currentPage$.value || 
+        (pageIndex === this.currentPage$.value + 1 && this.isCurrentPageValid())) {
+      this.currentPage$.next(pageIndex);
+    }
+  }
+
+  isLastPage(): boolean {
+    return this.currentPage$.value === this.totalPages - 1;
+  }
+  // isFirstPage():boolean{
+  //   return this.currentPage$.value == 0;
+  // }
 }

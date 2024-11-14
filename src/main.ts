@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { FormComponent } from './app/components/sale-form/sale-form.component';
-import { FormField } from './app/components/sale-form/sale-form.component';
 import {
   SaleType,
   PYMESale,
   FixedSale,
   MobileSale,
+  FormField
 } from './app/models/sale.model';
 
 @Component({
@@ -41,7 +41,7 @@ import {
         <app-sale-form
           [saleType]="currentType"
           [formFields]="getCurrentFields()"
-          (formSubmit)="onSaleSubmit($event)">
+          >
         </app-sale-form>
       </div>
     </div>
@@ -52,47 +52,42 @@ export class App {
   saleTypes: SaleType[] = ['PYME', 'FIXED', 'MOBILE'];
 
   private pymeFields: FormField[] = [
-    {
-      name: 'companyName',
-      label: 'Company Name',
-      type: 'text',
-      required: false,
-    },
-    {
-      name: 'employeeCount',
-      label: 'Number of Employees',
-      type: 'number',
-      required: true,
-    },
-    {
-      name: 'sector',
-      label: 'Business Sector',
-      type: 'select',
-      options: ['Technology', 'Retail', 'Manufacturing', 'Services', 'hola'],
-      required: true,
-    },
-    {
+    { id:1, type: 'text', label: 'Name', name: 'name', required: true },
+    { id:1, type: 'email', label: 'Email', name: 'email', required: true },
+    { id:1, type: 'select', label: 'Country', name: 'country', required: false, options: ['USA', 'Canada', 'UK', 'Australia'] },
+    { id:1, type: 'date', label: 'Birth Date', name: 'birthDate', required: true },
+    { id:1, type: 'checkbox', label: 'Subscribe to newsletter', name: 'subscribe', required: false },
+    { id:1, type: 'text', label: 'Address', name: 'address', required: true },
+    { id:1, type: 'text', label: 'City', name: 'city', required: true },
+    { id:1, type: 'text', label: 'Postal Code', name: 'postalCode', required: true },
+    { id:1, type: 'select', label: 'Favorite Color', name: 'favoriteColor', required: false, options: ['Red', 'Blue', 'Green', 'Yellow'] },
+    { id:1, type: 'number', label: 'Age', name: 'age', required: true },
+  {
+      id:1,
       name: 'birthDate',
       label: 'Birth Date',
       type: 'date',
-      required: true,
+      required: false,
     },
     {
+      id:1,
       name: 'acceptTerms',
       label: 'Términos y Condiciones',
       type: 'checkbox',
-      required: true,
+      required: false,
     },
   ];
 
   private fixedFields: FormField[] = [
     {
+      id:1,
       name: 'address',
       label: 'Installation Address',
       type: 'text',
       required: true,
     },
     {
+      id:1,
       name: 'planType',
       label: 'Plan Type',
       type: 'select',
@@ -100,6 +95,7 @@ export class App {
       required: true,
     },
     {
+      id:1,
       name: 'depto',
       label: 'Departameto',
       type: 'select',
@@ -107,6 +103,7 @@ export class App {
       required: true,
     },
     {
+      id:1,
       name: 'installationDate',
       label: 'Installation Date',
       type: 'date',
@@ -116,12 +113,14 @@ export class App {
 
   private mobileFields: FormField[] = [
     {
+      id:1,
       name: 'phoneNumber',
       label: 'Phone Number',
       type: 'text',
       required: true,
     },
     {
+      id:1,
       name: 'plan',
       label: 'Mobile Plan',
       type: 'select',
@@ -129,6 +128,7 @@ export class App {
       required: true,
     },
     {
+      id:1,
       name: 'deviceModel',
       label: 'Device Model',
       type: 'text',
@@ -147,10 +147,8 @@ export class App {
     }
   }
 
-  onSaleSubmit(sale: PYMESale | FixedSale | MobileSale) {
-    console.log('Sale submitted:', sale);
-    // Here you would typically send the sale to a backend service
-  }
+  
+
 }
 
 bootstrapApplication(App);

@@ -23,3 +23,25 @@ export interface MobileSale extends BaseSale {
   plan: string;
   deviceModel?: string;
 }
+export interface FormField {
+  id:number
+  name: string;
+  label: string;
+  type:
+    | 'text'
+    | 'number'
+    | 'email'
+    | 'password'
+    | 'checkbox'
+    | 'radio'
+    | 'select'
+    | 'date';
+  options?: string[];
+  required: boolean;
+}
+
+export interface FormPage {
+  fields: FormField[];
+  pageNumber: number;
+  isComplete: boolean;
+}

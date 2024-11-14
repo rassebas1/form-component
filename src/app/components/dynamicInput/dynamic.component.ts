@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormField } from '../../components/sale-form/sale-form.component';
+import { FormField } from '../../models/sale.model';
 
 // export interface FormField {
 //   type:

@@ -1,6 +1,15 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+<form [@formAnimation] [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+
+  <div class="progress-wrapper">
+    <div class="progress-bar">
+      <div class="progress" [style.width.%]="progressPercentage"></div>
+    </div>
+    <div class="page-indicator">Step {{ currentPage$.value + 1 }} of {{ totalPages }}</div>
+  </div>
+
+
   <app-dynamic-input
-    *ngFor="let config of formFields"
+    *ngFor="let config of paginatedInputConfigs"
     [config]="config"
     (valueChange)="onValueChange($event)"
   ></app-dynamic-input>
@@ -15,8 +24,34 @@
       </div>
     </div>
   </div>
+  <div class="flex justify-between mt-6">
+    <button *ngIf="currentPage$.value !==0" type="button" (click)="previousPage()" 
+      class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50"
+      [disabled]="currentPage$.value === 0">
+      Previous
+    </button>
+    <span class="self-center text-gray-600">Page {{ currentPage$.value + 1 }} of {{ totalPages }}</span>
+    <button *ngIf="!isLastPage()" type="button" (click)="nextPage()" 
+      class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+      Next
+    </button>
+    <button *ngIf="isLastPage()" type="submit" 
+      class="px-4 py-2 bg-gray-600 text-white rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      [disabled]="!isFormValid()">
+      Submit
+    </button>
 
-  <button type="submit" class="submit-button" [disabled]="!isFormValid()">
-    Submit
-  </button>
+    <!-- <div class="page-dots">
+      <span
+        *ngFor="let page of formPages; let i = index"
+        class="dot"
+        [class.active]="i === currentPage"
+        [class.completed]="isPageComplete(i)"
+        (click)="goToPage(i)"
+      ></span>
+    </div> -->
+    </div>
+  <!-- <button type="submit" class="submit-button" [disabled]="!isFormValid()">
+    Next
+  </button> -->
 </form>
