@@ -62,7 +62,7 @@ export class App {
     { id:1, type: 'text', label: 'Postal Code', name: 'postalCode', required: true },
     { id:1, type: 'select', label: 'Favorite Color', name: 'favoriteColor', required: false, options: ['Red', 'Blue', 'Green', 'Yellow'] },
     { id:1, type: 'number', label: 'Age', name: 'age', required: true },
-  {
+   {
       id:1,
       name: 'birthDate',
       label: 'Birth Date',
@@ -99,7 +99,7 @@ export class App {
       name: 'depto',
       label: 'Departameto',
       type: 'select',
-      options: [],
+      options: ["bogota dc", "bucaramanga"],
       required: true,
     },
     {

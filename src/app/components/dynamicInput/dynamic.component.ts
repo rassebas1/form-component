@@ -3,21 +3,6 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormField } from '../../models/sale.model';
 
-// export interface FormField {
-//   type:
-//     | 'text'
-//     | 'number'
-//     | 'email'
-//     | 'password'
-//     | 'checkbox'
-//     | 'radio'
-//     | 'select';
-//   label: string;
-//   name: string;
-//   required: boolean;
-//   options?: string[];
-// }
-
 @Component({
   selector: 'app-dynamic-input',
   templateUrl: './dynamic.component.html',
